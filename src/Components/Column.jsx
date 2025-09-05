@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Columns2 } from "lucide-react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import { useBoard } from "../Utilities/Store/Store";
@@ -10,24 +9,32 @@ function Column({ col }) {
   const removeColumn = useBoard((s) => s.removeColumn);
   const updateColumnTitle = useBoard((s) => s.updateColumnTitle);
 
-  const [newTitle, setNewTitle] = useState("");
-  const [newDesc, setNewDesc] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [tempTitle, setTempTitle] = useState(col.title);
 
-  //  make column droppable
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newTitle, setNewTitle] = useState("");
+  const [newDesc, setNewDesc] = useState("");
+
+  // make column droppable
   const { setNodeRef } = useDroppable({ id: col.id });
+
+  const handleAddCard = () => {
+    if (!newTitle.trim()) return;
+    addCard(col.id, newTitle.trim(), newDesc.trim());
+    setNewTitle("");
+    setNewDesc("");
+    setIsModalOpen(false);
+  };
 
   return (
     <div
-      ref={setNodeRef} //attach droppable ref
-      className={`flex mt-8 ml-5  flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3
-        `}
-      // ${isOver ? "ring-2 ring-blue-500" : ""}
+      ref={setNodeRef}
+      className="flex mt-8 ml-5 flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3"
     >
       {/* Column Header */}
       <div className="flex items-center gap-2">
-        {/* <Columns2 className="h-4 w-4 text-zinc-400" /> */}
         {isEditing ? (
           <input
             value={tempTitle}
@@ -55,32 +62,13 @@ function Column({ col }) {
         </button>
       </div>
 
-      {/* Add Card Inputs */}
-      <div className="flex flex-col gap-2">
-        <input
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          placeholder="Card title..."
-          className="rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm"
-        />
-        <input
-          value={newDesc}
-          onChange={(e) => setNewDesc(e.target.value)}
-          placeholder="Card description..."
-          className="rounded-xl border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm"
-        />
-        <button
-          onClick={() => {
-            if (!newTitle.trim()) return;
-            addCard(col.id, newTitle.trim(), newDesc.trim());
-            setNewTitle("");
-            setNewDesc("");
-          }}
-          className="rounded-xl border border-zinc-700 bg-zinc-800 p-2 text-sm cursor-pointer"
-        >
-          + Add Card
-        </button>
-      </div>
+      {/* Add Card Button */}
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className=" rounded-xl border border-zinc-700 bg-zinc-800 p-2 text-sm cursor-pointer hover:bg-zinc-700"
+      >
+        + Add Card
+      </button>
 
       {/* Cards */}
       <div id={col.id} className="flex min-h-[4rem] flex-col gap-2">
@@ -90,6 +78,46 @@ function Column({ col }) {
           ))}
         </SortableContext>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 bg-opacity-10 z-50">
+          <div className="bg-zinc-900 p-6 rounded-xl w-96 shadow-lg">
+            <h3 className="text-lg font-semibold mb-4 text-white">Create New Card</h3>
+
+            <input
+              type="text"
+              placeholder="Card title..."
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              className="w-full border p-2 rounded-md mb-3 text-white"
+              required
+            />
+
+            <textarea
+              placeholder="Card description..."
+              value={newDesc}
+              onChange={(e) => setNewDesc(e.target.value)}
+              className="w-full border p-2 rounded-md mb-4 text-white"
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 bg-gray-700 cursor-pointer rounded-lg hover:bg-gray-400 hover:text-black"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddCard}
+                className="px-4 py-2 bg-white cursor-pointer text-black rounded-lg hover:bg-zinc-600"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
