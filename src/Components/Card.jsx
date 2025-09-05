@@ -74,7 +74,7 @@ function Card({ id, colId }) {
           onPointerDown={(e) => e.stopPropagation()} // prevent kry ga
           onClick={() => removeCard(colId, id)}
         >
-          <Trash2 className="h-4 w-4 text-zinc-400 hover:text-red-400" />
+          <Trash2 className="h-4 w-4 text-zinc-400 hover:text-red-400 cursor-pointer" />
         </button>
       </div>
 

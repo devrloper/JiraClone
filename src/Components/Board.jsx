@@ -65,12 +65,12 @@ function Board() {
         {/* Columns Grid */}
 
         {/* Add Column Button only inside Board */}
-        <div className="flex justify-end p-4 mt-15 ">
+        <div className="flex justify-end p-4 mt-15  ">
           <button
             onClick={() => setIsOpen(true)}
-            className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-900 px-3 py-2"
+            className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-900 px-3 py-2 cursor-pointer"
           >
-            <Plus className="h-4 w-4 " /> Add column
+            <Plus className="h-4 w-4  " /> Add column
           </button>
         </div>
         <div className="flex flex-col  lg:flex-row gap-4  sm:overflow-x-auto ">
@@ -107,7 +107,7 @@ function Board() {
                 </button>
                 <button
                   onClick={handleAddColumn}
-                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700"
+                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 cursor-pointer"
                 >
                   Add
                 </button>

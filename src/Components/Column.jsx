@@ -49,7 +49,7 @@ function Column({ col }) {
         )}
         <button
           onClick={() => removeColumn(col.id)}
-          className="text-xs text-red-400"
+          className="text-xs text-red-400 cursor-pointer"
         >
           Remove
         </button>
@@ -76,7 +76,7 @@ function Column({ col }) {
             setNewTitle("");
             setNewDesc("");
           }}
-          className="rounded-xl border border-zinc-700 bg-zinc-800 p-2 text-sm"
+          className="rounded-xl border border-zinc-700 bg-zinc-800 p-2 text-sm cursor-pointer"
         >
           + Add Card
         </button>
