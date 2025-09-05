@@ -1,34 +1,52 @@
 import { useState } from "react";
 import { Columns2 } from "lucide-react";
-import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
-import { useBoard } from "../Pages/Store/Store"; //access fuction from store
-import Card from "./Card";
 import { useDroppable } from "@dnd-kit/core";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import { useBoard } from "../Utilities/Store/Store";
+import Card from "./Card";
 
 function Column({ col }) {
-  //grab the addcard or removecol function from zustand store
   const addCard = useBoard((s) => s.addCard);
   const removeColumn = useBoard((s) => s.removeColumn);
-  //stores cards titles or description
+  const updateColumnTitle = useBoard((s) => s.updateColumnTitle);
+
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempTitle, setTempTitle] = useState(col.title);
 
-  // 👇 make column droppable
-  const { setNodeRef, isOver } = useDroppable({
-    id: col.id,
-  });
+  //  make column droppable
+  const { setNodeRef } = useDroppable({ id: col.id });
 
   return (
     <div
-      ref={setNodeRef} // 👈 attach droppable ref
-      className={`flex w-full flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3 ${
-        isOver ? "ring-2 ring-blue-500" : ""
-      }`}
+      ref={setNodeRef} //attach droppable ref
+      className={`flex mt-8 ml-5  flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3
+        `}
+      // ${isOver ? "ring-2 ring-blue-500" : ""}
     >
       {/* Column Header */}
       <div className="flex items-center gap-2">
         <Columns2 className="h-4 w-4 text-zinc-400" />
-        <h3 className="flex-1 font-medium text-zinc-100">{col.title}</h3>
+        {isEditing ? (
+          <input
+            value={tempTitle}
+            onChange={(e) => setTempTitle(e.target.value)}
+            onBlur={() => {
+              updateColumnTitle(col.id, tempTitle.trim() || col.title);
+              setIsEditing(false);
+            }}
+            autoFocus
+            className="flex-1 rounded bg-zinc-800 px-2 text-sm"
+          />
+        ) : (
+          <h3
+            className="flex-1 font-medium text-zinc-100 cursor-pointer"
+            onClick={() => setIsEditing(true)}
+          >
+            {col.title}
+          </h3>
+        )}
         <button
           onClick={() => removeColumn(col.id)}
           className="text-xs text-red-400"
@@ -64,17 +82,12 @@ function Column({ col }) {
         </button>
       </div>
 
-      {/* Cards List */}
-
-      
+      {/* Cards */}
       <div id={col.id} className="flex min-h-[4rem] flex-col gap-2">
-        {/* cards drag and drop kay doran arrange keran */}
         <SortableContext items={col.cardIds} strategy={rectSortingStrategy}>
-          {col.cardIds.length > 0 ? (
-            col.cardIds.map((cid) => <Card key={cid} id={cid} colId={col.id} />)
-          ) : (
-            <p className="text-sm text-zinc-500 italic"></p> // 👈 empty column indicator
-          )}
+          {col.cardIds.map((cid) => (
+            <Card key={cid} id={cid} colId={col.id} />
+          ))}
         </SortableContext>
       </div>
     </div>

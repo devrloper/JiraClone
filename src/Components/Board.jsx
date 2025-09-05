@@ -1,7 +1,7 @@
 import { DndContext, DragOverlay, closestCorners } from "@dnd-kit/core"; //libraray of dndkit used for drag and drop
 import { Plus, X } from "lucide-react"; //icons import
 import { useState, useMemo } from "react";
-import { useBoard } from "../Pages/Store/Store";
+import { useBoard } from "../Utilities/Store/Store";
 import Column from "./Column";
 function findColumnIdByCardId(columns, cardId) {
   //Yai  cardid ka pta lagae ga kay kis column may hai
@@ -53,69 +53,74 @@ function Board() {
         moveCard({ fromColId, toColId, cardId: active.id, toIndex }); //shift card to one column to other
       }}
     >
-      {/* Header */}
-      <header className="sticky top-0 border-b border-zinc-800 bg-zinc-950 p-4 z-40">
+      {/* Fixed Header */}
+
+      <header className="fixed top-0 left-64 right-0 border-b border-zinc-800 bg-zinc-950 p-4 z-40">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <h1 className="text-2xl font-bold">Organize your tasks</h1>
         </div>
       </header>
-      {/* Add Column Button only inside Board */}
-      <div className="flex justify-end p-4">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-900 px-3 py-2"
-        >
-          <Plus className="h-4 w-4" /> Add column
-        </button>
-      </div>
-      {/* Columns Grid */}
-      <main className="mx-auto w-full p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div className="bg-black min-h-screen h-full lg:overflow-hidden ">
+        {/* Columns Grid */}
+
+        {/* Add Column Button only inside Board */}
+        <div className="flex justify-end p-4 mt-15 ">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-900 px-3 py-2"
+          >
+            <Plus className="h-4 w-4 " /> Add column
+          </button>
+        </div>
+        <div className="flex flex-col  lg:flex-row gap-4  sm:overflow-x-auto ">
           {columnList.map((col) => (
-            <Column key={col.id} col={col} />
+            <div className="min-w-[300px] flex-shrink-0  ">
+              <Column key={col.id} col={col} />
+            </div>
           ))}
         </div>
-      </main>
-      {/* Add Column Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-zinc-900 p-6 rounded-2xl shadow-lg w-96">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Add New Column</h2>
-              <button onClick={() => setIsOpen(false)}>
-                <X className="h-5 w-5 text-zinc-400 hover:text-zinc-200" />
-              </button>
-            </div>
-            <input
-              type="text"
-              value={colName}
-              onChange={(e) => setColName(e.target.value)}
-              placeholder="Enter column name"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <div className="mt-4 flex justify-end gap-2">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 hover:bg-zinc-700"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddColumn}
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700"
-              >
-                Add
-              </button>
+
+        {/* Add Column Modal */}
+        {isOpen && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+            <div className="bg-zinc-900 p-6 rounded-2xl shadow-lg w-96">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Add New Column</h2>
+                <button onClick={() => setIsOpen(false)}>
+                  <X className="h-5 w-5 text-zinc-400 hover:text-zinc-200" />
+                </button>
+              </div>
+              <input
+                type="text"
+                value={colName}
+                onChange={(e) => setColName(e.target.value)}
+                placeholder="Enter column name"
+                className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <div className="mt-4 flex justify-end gap-2">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 hover:bg-zinc-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddColumn}
+                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700"
+                >
+                  Add
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       {/* Drag Overlay */}
       <DragOverlay>
         {activeCardId ? (
-          <div className="w-[20rem] rounded-2xl border border-zinc-700 bg-zinc-800 p-3 shadow-lg">
+          <div className="w-[20rem] rounded-2xl  border-zinc-700 bg-zinc-800 p-3 shadow-lg ">
             <div className="flex items-center gap-2">
-            
               <div className="text-sm">
                 {useBoard.getState().cards[activeCardId]?.title}
               </div>

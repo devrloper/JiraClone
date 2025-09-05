@@ -4,9 +4,11 @@ const Home = () => {
   return (
     <div>
       {/* Header */}
-        <header className="sticky top-0 border-b border-zinc-800 bg-zinc-950 p-4 z-40">
-          <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <header className=" top-0 border-b border-zinc-800 bg-zinc-950 p-4 ">
+          <div className="min-h-screen">
             <h1 className="text-2xl font-bold">HomePage</h1>
+
+
           </div>
         </header>
     </div>
