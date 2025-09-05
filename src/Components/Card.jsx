@@ -1,4 +1,4 @@
-import { useState } from "react"; 
+import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Trash2, Pencil } from "lucide-react";
@@ -36,13 +36,12 @@ function Card({ id, colId }) {
         "group rounded-2xl border border-zinc-700 bg-zinc-800 p-3 shadow-sm",
         isDragging && "opacity-60"
       )}
-      {...attributes} 
-      {...listeners}   // kahi say bhe drag ho jaye ga card
+      {...attributes}
+      {...listeners} // kahi say bhe drag ho jaye ga card
     >
       <div className="flex items-center gap-2">
-        
         <button className="cursor-grab">
-          <GripVertical className="h-4 w-4 text-zinc-400" />
+          {/* <GripVertical className="h-4 w-4 text-zinc-400" /> */}
         </button>
 
         {/* Title with Edit Icon */}
@@ -109,4 +108,3 @@ function Card({ id, colId }) {
 }
 
 export default Card;
-

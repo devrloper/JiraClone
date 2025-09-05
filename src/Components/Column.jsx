@@ -27,7 +27,7 @@ function Column({ col }) {
     >
       {/* Column Header */}
       <div className="flex items-center gap-2">
-        <Columns2 className="h-4 w-4 text-zinc-400" />
+        {/* <Columns2 className="h-4 w-4 text-zinc-400" /> */}
         {isEditing ? (
           <input
             value={tempTitle}
