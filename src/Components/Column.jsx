@@ -31,7 +31,7 @@ function Column({ col }) {
   return (
     <div
       ref={setNodeRef}
-      className="flex mt-8 ml-5 flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3"
+      className="flex  ml-5 flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3"
     >
       {/* Column Header */}
       <div className="flex items-center gap-2">
@@ -61,7 +61,14 @@ function Column({ col }) {
           Remove
         </button>
       </div>
-
+{/* Cards */}
+      <div id={col.id} className="flex  flex-col gap-2">
+        <SortableContext items={col.cardIds} strategy={rectSortingStrategy}>
+          {col.cardIds.map((cid) => (
+            <Card key={cid} id={cid} colId={col.id} />
+          ))}
+        </SortableContext>
+      </div>
       {/* Add Card Button */}
       <button
         onClick={() => setIsModalOpen(true)}
@@ -70,14 +77,7 @@ function Column({ col }) {
         + Add Card
       </button>
 
-      {/* Cards */}
-      <div id={col.id} className="flex min-h-[4rem] flex-col gap-2">
-        <SortableContext items={col.cardIds} strategy={rectSortingStrategy}>
-          {col.cardIds.map((cid) => (
-            <Card key={cid} id={cid} colId={col.id} />
-          ))}
-        </SortableContext>
-      </div>
+      
 
       {/* Modal */}
       {isModalOpen && (

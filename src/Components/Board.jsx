@@ -55,17 +55,9 @@ function Board() {
     >
       {/* Fixed Header */}
 
-      <header className="fixed top-0 left-64 right-0 border-b border-zinc-800 bg-zinc-950 p-4 z-40">
+      <header className="top-0 left-64 right-0 border-b border-zinc-800 bg-zinc-950 p-4 z-40">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <h1 className="text-2xl font-bold">Organize your tasks</h1>
-        </div>
-      </header>
-
-      <div className="bg-black min-h-screen h-full lg:overflow-hidden ">
-        {/* Columns Grid */}
-
-        {/* Add Column Button only inside Board */}
-        <div className="flex justify-end p-4 mt-15  ">
           <button
             onClick={() => setIsOpen(true)}
             className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-900 px-3 py-2 cursor-pointer"
@@ -73,7 +65,16 @@ function Board() {
             <Plus className="h-4 w-4  " /> Add column
           </button>
         </div>
-        <div className="flex flex-col  lg:flex-row gap-4  sm:overflow-x-auto ">
+      </header>
+
+      <div className="bg-black min-h-screen  ">
+        {/* Columns Grid */}
+
+        {/* Add Column Button only inside Board */}
+        <div className="flex justify-end p-4   ">
+          
+        </div>
+        <div className="flex flex-col  lg:flex-row gap-4  sm:overflow-x-auto">
           {columnList.map((col) => (
             <div className="min-w-[300px] flex-shrink-0  ">
               <Column key={col.id} col={col} />

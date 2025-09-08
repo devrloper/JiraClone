@@ -10,6 +10,7 @@ export const useBoard = create(
         "col-todo": { id: "col-todo", title: "To Do", cardIds: [] },
         "col-doing": { id: "col-doing", title: "To Do", cardIds: [] },
         "col-dong": { id: "col-dong", title: "To Do", cardIds: [] },
+        
       },
       cards: {}, //object,all cards detail inside it
       addColumn: (
