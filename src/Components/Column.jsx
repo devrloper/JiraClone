@@ -31,7 +31,7 @@ function Column({ col }) {
   return (
     <div
       ref={setNodeRef}
-      className="flex  ml-5 flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3"
+      className="flex  ml-5 flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3 "
     >
       {/* Column Header */}
       <div className="flex items-center gap-2">
@@ -61,8 +61,8 @@ function Column({ col }) {
           Remove
         </button>
       </div>
-{/* Cards */}
-      <div id={col.id} className="flex  flex-col gap-2">
+      {/* Cards */}
+      <div id={col.id} className="flex  flex-col gap-2 ">
         <SortableContext items={col.cardIds} strategy={rectSortingStrategy}>
           {col.cardIds.map((cid) => (
             <Card key={cid} id={cid} colId={col.id} />
@@ -77,13 +77,13 @@ function Column({ col }) {
         + Add Card
       </button>
 
-      
-
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 bg-opacity-10 z-50">
           <div className="bg-zinc-900 p-6 rounded-xl w-96 shadow-lg">
-            <h3 className="text-lg font-semibold mb-4 text-white">Create New Card</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">
+              Create New Card
+            </h3>
 
             <input
               type="text"
