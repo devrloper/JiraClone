@@ -153,7 +153,7 @@ export const useBoard = create(
         }),
     }),
     {
-      name: "Local-storage",
+      name: "Jira Board",
       getStorage: () => localStorage, //use is optional
     }
   )
