@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from "react"; 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical, Trash2, Pencil } from "lucide-react";
@@ -37,7 +37,7 @@ function Card({ id, colId }) {
         isDragging && "opacity-60"
       )}
       {...attributes}
-      {...listeners} // kahi say bhe drag ho jaye ga card
+      {...(!isEditingTitle && !isEditingDesc ? listeners : {})} // Disable drag listeners while editing
     >
       <div className="flex items-center gap-2">
         <button className="cursor-grab">
@@ -53,24 +53,32 @@ function Card({ id, colId }) {
               updateCard(id, tempTitle.trim() || card.title, card.description);
               setIsEditingTitle(false);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                updateCard(id, tempTitle.trim() || card.title, card.description);
+                setIsEditingTitle(false);
+              }
+            }}
             autoFocus
             className="flex-1 rounded bg-zinc-700 px-2 text-sm text-zinc-100"
           />
         ) : (
           <div className="flex-1 flex items-center justify-between">
-            <span className="text-sm text-zinc-100 font-medium">
-              {card.title}
-            </span>
+            <span className="text-sm text-zinc-100 font-medium">{card.title}</span>
             <Pencil
               className="h-4 w-4 text-zinc-400 cursor-pointer hover:text-blue-400"
-              onPointerDown={(e) => e.stopPropagation()} //  prevent kry ga //onpointer down
-              onClick={() => setIsEditingTitle(true)}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={() => {
+                setTempTitle(card.title || "");
+                setIsEditingTitle(true);
+              }}
             />
           </div>
         )}
 
         <button
-          onPointerDown={(e) => e.stopPropagation()} // prevent kry ga
+          onPointerDown={(e) => e.stopPropagation()}
           onClick={() => removeCard(colId, id)}
         >
           <Trash2 className="h-4 w-4 text-zinc-400 hover:text-red-400 cursor-pointer" />
@@ -86,6 +94,13 @@ function Card({ id, colId }) {
             updateCard(id, card.title, tempDesc.trim());
             setIsEditingDesc(false);
           }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              updateCard(id, card.title, tempDesc.trim());
+              setIsEditingDesc(false);
+            }
+          }}
           autoFocus
           className="w-full mt-2 rounded bg-zinc-700 px-2 text-xs text-zinc-100"
         />
@@ -98,8 +113,11 @@ function Card({ id, colId }) {
           )}
           <Pencil
             className="h-4 w-4 text-zinc-400 cursor-pointer hover:text-blue-400 ml-2"
-            onPointerDown={(e) => e.stopPropagation()} //prevent kry ga
-            onClick={() => setIsEditingDesc(true)}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={() => {
+              setTempDesc(card.description || "");
+              setIsEditingDesc(true);
+            }}
           />
         </div>
       )}
