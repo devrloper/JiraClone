@@ -130,6 +130,8 @@ function Board() {
                   Add
                 </button>
               </div>
+              onChange={(e) => setColName(e.target.value.slice(0, 70))} // max 255 chars
+              maxLength={255} // browser side limit
             </div>
           </div>
         )}

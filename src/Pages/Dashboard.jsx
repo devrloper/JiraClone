@@ -7,7 +7,7 @@ function App() {
   const [active, setActive] = useState("dashboard");
 
   return (
-    < div className="flex  text-zinc-100 bg-black  ">
+    < div className="flex  text-zinc-100 bg-black   ">
       {/* Sidebar */}
   
         <Sidebar active={active} setActive={setActive} />

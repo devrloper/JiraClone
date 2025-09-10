@@ -17,6 +17,9 @@ function Column({ col }) {
   const [newTitle, setNewTitle] = useState("");
   const [newDesc, setNewDesc] = useState("");
 
+  // Tooltip state
+  const [showTooltip, setShowTooltip] = useState(false);
+
   // make column droppable
   const { setNodeRef } = useDroppable({ id: col.id });
 
@@ -31,10 +34,10 @@ function Column({ col }) {
   return (
     <div
       ref={setNodeRef}
-      className="flex  ml-5 flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3 "
+      className="flex ml-5 flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3"
     >
       {/* Column Header */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 relative">
         {isEditing ? (
           <input
             value={tempTitle}
@@ -44,16 +47,26 @@ function Column({ col }) {
               setIsEditing(false);
             }}
             autoFocus
-            className="flex-1 rounded bg-zinc-800 px-2 text-sm"
+            className="flex-1 rounded bg-zinc-800 px-2 text-sm text-white"
           />
         ) : (
           <h3
-            className="flex-1 font-medium text-zinc-100 cursor-pointer"
+            className="flex-1 font-medium text-zinc-100 cursor-pointer truncate max-w-[200px]"
             onClick={() => setIsEditing(true)}
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
           >
             {col.title}
           </h3>
         )}
+
+        {/* Tooltip (now inside column, with wrapping + small text) */}
+        {showTooltip && !isEditing && (
+          <div className="absolute top-full left-0 mt-1 w-full rounded-lg bg-stone-100 text-black text-xs p-2 shadow-lg break-words whitespace-normal">
+            {col.title}
+          </div>
+        )}
+
         <button
           onClick={() => removeColumn(col.id)}
           className="text-xs text-red-400 cursor-pointer"
@@ -61,25 +74,27 @@ function Column({ col }) {
           Remove
         </button>
       </div>
+
       {/* Cards */}
-      <div id={col.id} className="flex  flex-col gap-2 ">
+      <div id={col.id} className="flex flex-col gap-2">
         <SortableContext items={col.cardIds} strategy={rectSortingStrategy}>
           {col.cardIds.map((cid) => (
             <Card key={cid} id={cid} colId={col.id} />
           ))}
         </SortableContext>
       </div>
+
       {/* Add Card Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className=" rounded-xl border border-zinc-700 bg-zinc-800 p-2 text-sm cursor-pointer hover:bg-zinc-700"
+        className="rounded-xl border border-zinc-700 bg-zinc-800 p-2 text-sm cursor-pointer hover:bg-zinc-700"
       >
         + Add Card
       </button>
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/60 bg-opacity-10 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
           <div className="bg-zinc-900 p-6 rounded-xl w-96 shadow-lg">
             <h3 className="text-lg font-semibold mb-4 text-white">
               Create New Card

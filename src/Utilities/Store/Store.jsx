@@ -139,7 +139,7 @@ export const useBoard = create(
 
       updateCard: (cardId, newTitle, newDesc) =>
         set((state) => {
-          if (!state.cards[cardId]) return state;
+          if (!state.cards[cardId]) return {};
           return {
             cards: {
               ...state.cards,
