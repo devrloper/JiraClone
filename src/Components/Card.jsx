@@ -6,14 +6,20 @@ import clsx from "clsx";
 import { useBoard } from "../Utilities/Store/Store";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
-
+import { Link } from "react-router-dom";
 function Card({ id, colId }) {
   const card = useBoard((s) => s.cards[id]);
   const removeCard = useBoard((s) => s.removeCard);
   const updateCard = useBoard((s) => s.updateCard);
 
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
 
   const [tempTitle, setTempTitle] = useState(card?.title || "");
   const [tempDesc, setTempDesc] = useState(card?.description || "");
@@ -27,11 +33,17 @@ function Card({ id, colId }) {
       // Set initial content
       quill.root.innerHTML = tempDesc || "";
 
-      // Update tempDesc on text change
+      // Update tempDesc on text change with LIMIT
       quill.on("text-change", () => {
+        const plainText = quill.getText(); // plain text (without HTML tags)
+
+        if (plainText.length > 500) {
+          // Limit = 500 chars
+          quill.deleteText(500, plainText.length);
+        }
+
         setTempDesc(quill.root.innerHTML);
       });
-
     }
   }, [quill, isModalOpen]);
 
@@ -69,7 +81,7 @@ function Card({ id, colId }) {
                 setIsModalOpen(true);
               }}
             >
-              {truncatedTitle}
+              <Link to={`/card/${id}`}>{truncatedTitle}</Link>{" "}
             </span>
 
             <Pencil
@@ -86,6 +98,11 @@ function Card({ id, colId }) {
           {showTooltip && (
             <div className="absolute top-full left-0 mt-1 z-50 max-w-xs rounded-md bg-stone-100 text-black text-xs p-2 shadow-lg break-words whitespace-normal">
               {card.title}
+              <div
+                className="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 
+                               border-l-4 border-r-4 border-b-4 border-transparent 
+                               border-b-stone-100"
+              ></div>
             </div>
           )}
 
@@ -103,46 +120,64 @@ function Card({ id, colId }) {
 
       {/* MODAL */}
       {/* {isModalOpen && ( */}
-        <div className={isModalOpen ? "fixed inset-0 bg-black/60 flex items-center justify-center z-50" : "hidden"}>
-          <div className="bg-zinc-900 p-6 rounded-2xl shadow-lg w-[90%] max-w-2xl">
-            {/* Title */}
-            <h2 className="text-lg font-semibold text-white mb-4">
-              <input
-                value={tempTitle}
-                onChange={(e) => setTempTitle(e.target.value)}
-                className="w-full rounded bg-zinc-800 px-3 py-2 text-white"
-              />
-            </h2>
+      <div
+        className={
+          isModalOpen
+            ? "fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+            : "hidden"
+        }
+      >
+        <div className="bg-zinc-900 p-6 rounded-2xl shadow-lg w-[90%] max-w-2xl">
+          {/* Title */}
+          <h2 className="text-lg font-semibold text-white mb-4">
+            <input
+              value={tempTitle}
+              maxLength={70} //Title limit
+              onChange={(e) => setTempTitle(e.target.value)}
+              className="w-full rounded bg-zinc-800 px-3 py-2 text-white"
+            />
+            <p className="text-xs text-gray-400 mt-1">{tempTitle.length}/70</p>
+          </h2>
 
-            {/* Rich Text Description using react-quilljs */}
-            <div className="bg-black/60 rounded-md text-white ">
-              <div ref={quillRef} style={{ minHeight: "200px" }} />
-            </div>
+          {/* Rich Text Description using react-quilljs */}
+          <div className="bg-black/60 rounded-md text-white ">
+            <div ref={quillRef} style={{ minHeight: "200px" }} />
+          </div>
 
-            {/* Buttons */}
-            <div className="mt-4 flex justify-end gap-2">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600 cursor-pointer"
-              >
-                Close
-              </button>
-              <button
-                onClick={() => {
-                  updateCard(id, tempTitle.trim() || card.title, (tempDesc || "").trim());
-                  setIsModalOpen(false);
-                }}
-                className="px-4 py-2 rounded-lg bg-white text-black hover:bg-zinc-200 cursor-pointer"
-              >
-                Save
-              </button>
-            </div>
+          {/* Buttons */}
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="px-4 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600 cursor-pointer"
+            >
+              Close
+            </button>
+            <button
+              onClick={() => {
+                updateCard(
+                  id,
+                  tempTitle.trim() || card.title,
+                  (tempDesc || "").trim()
+                );
+                setIsModalOpen(false);
+              }}
+              className="px-4 py-2 rounded-lg bg-white text-black hover:bg-zinc-200 cursor-pointer"
+            >
+              Save
+            </button>
+            <Link
+              to={`/card/${id}`}
+              className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-400 cursor-pointer"
+              onClick={() => setIsModalOpen(false)} // modal bhi band ho jaye
+            >
+              Show Details
+            </Link>
           </div>
         </div>
+      </div>
       {/* )} */}
     </>
   );
 }
 
 export default Card;
-

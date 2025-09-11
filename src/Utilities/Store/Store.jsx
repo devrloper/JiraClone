@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { nanoid } from "nanoid"; //make unique Id for each card or column its a library
 import { arrayMove } from "@dnd-kit/sortable"; //helper to move element to one positon to another(use for drag or drop)
 import { persist } from "zustand/middleware";
-
+import { v4 as uuidv4 } from "uuid";
 export const useBoard = create(
   persist(
     (set) => ({
@@ -151,7 +151,25 @@ export const useBoard = create(
             },
           };
         }),
+  ShowDetail: (colId, title = "", description = "") => {
+  const id = uuidv4(); // unique id
+  set((state) => ({
+    cards: {
+      ...state.cards,
+      [id]: { id, colId, title, description },
+    },
+    columns: {
+      ...state.columns,
+      [colId]: {
+        ...state.columns[colId],
+        cardIds: [...state.columns[colId].cardIds, id],
+      },
+    },
+  }));
+},
+
     }),
+    
     {
       name: "Jira Board",
       getStorage: () => localStorage, //use is optional

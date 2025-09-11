@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay,rectIntersection  } from "@dnd-kit/core"; // dnd-kit se drag & drop ka setup
+import { DndContext, DragOverlay, rectIntersection } from "@dnd-kit/core"; // dnd-kit se drag & drop ka setup
 import { Plus, X } from "lucide-react"; // icons
 import { useState, useMemo } from "react";
 import { useBoard } from "../Utilities/Store/Store"; // custom zustand store
@@ -39,8 +39,8 @@ function Board() {
   return (
     //  DndContext wrap karta hai drag/drop logic
     <DndContext
-     collisionDetection={rectIntersection} // <-- rectIntersection detects column boundaries better
-       // kis element se takraya, yeh logic decide karega
+      collisionDetection={rectIntersection} // <-- rectIntersection detects column boundaries better
+      // kis element se takraya, yeh logic decide karega
       onDragStart={(e) => setActiveCardId(e.active.id)} // jab drag start ho to card ka id save
       onDragEnd={(e) => {
         const { active, over } = e;
@@ -108,11 +108,13 @@ function Board() {
             <input
               type="text"
               value={colName}
-              onChange={(e) => setColName(e.target.value.slice(0, 70))}
-              maxLength={70}
+              onChange={(e) => setColName(e.target.value)}
+              maxLength={70} // limit 
               placeholder="Enter column name"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            <p className="text-xs text-gray-400 mt-1">{colName.length}/70</p>
+
             <div className="mt-4 flex justify-end gap-2">
               <button
                 onClick={() => setIsOpen(false)}

@@ -41,14 +41,16 @@ function Column({ col }) {
           {isEditing ? (
             <input
               value={tempTitle}
-              onChange={(e) => setTempTitle(e.target.value)}
+              onChange={(e) => setTempTitle(e.target.value.slice(0, 70))} // limit
+              maxLength={70} // browser level limit
               onBlur={() => {
                 updateColumnTitle(col.id, tempTitle.trim() || col.title);
                 setIsEditing(false);
               }}
               autoFocus
-              className="w-full rounded bg-zinc-800 px-2 text-sm text-white"
+              className="w-full rounded bg-zinc-800 px-2 text-sm text-white"  
             />
+             
           ) : (
             <div className="relative w-fit">
               <h3
@@ -62,9 +64,11 @@ function Column({ col }) {
 
               {/* Tooltip */}
               {showTooltip && !isEditing && (
-                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 
-                                z-[9999] max-w-xs rounded-md bg-stone-100 text-black text-xs 
-                                p-2 shadow-lg break-words whitespace-normal">
+                <div
+                  className="absolute top-full mt-2 left-1/2 -translate-x-1/2 
+                                 max-w-[190px] rounded-md bg-stone-100 text-black text-xs 
+                                p-2 shadow-lg break-words whitespace-normal"
+                >
                   {col.title}
                   {/* Arrow */}
                   <div
@@ -113,9 +117,11 @@ function Column({ col }) {
               type="text"
               placeholder="Card title..."
               value={newTitle}
+              maxLength={70} //  Title limit yahan bhi
               onChange={(e) => setNewTitle(e.target.value)}
               className="w-full border p-2 rounded-md mb-3 text-white"
             />
+            <p className="text-xs text-gray-400 mt-1">{newTitle.length}/70</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setIsModalOpen(false)}
