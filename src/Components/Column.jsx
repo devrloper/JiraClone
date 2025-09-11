@@ -15,7 +15,7 @@ function Column({ col }) {
   const [newTitle, setNewTitle] = useState("");
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // ✅ Droppable
+  //  Droppable
   const { isOver, setNodeRef } = useDroppable({ id: col.id });
 
   const handleAddCard = () => {
