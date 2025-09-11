@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay, closestCorners } from "@dnd-kit/core"; // dnd-kit se drag & drop ka setup
+import { DndContext, DragOverlay,rectIntersection  } from "@dnd-kit/core"; // dnd-kit se drag & drop ka setup
 import { Plus, X } from "lucide-react"; // icons
 import { useState, useMemo } from "react";
 import { useBoard } from "../Utilities/Store/Store"; // custom zustand store
@@ -39,7 +39,8 @@ function Board() {
   return (
     //  DndContext wrap karta hai drag/drop logic
     <DndContext
-      collisionDetection={closestCorners} // kis element se takraya, yeh logic decide karega
+     collisionDetection={rectIntersection} // <-- rectIntersection detects column boundaries better
+       // kis element se takraya, yeh logic decide karega
       onDragStart={(e) => setActiveCardId(e.active.id)} // jab drag start ho to card ka id save
       onDragEnd={(e) => {
         const { active, over } = e;
@@ -72,12 +73,12 @@ function Board() {
             <button
               onClick={() => setIsOpen(true)}
               title="Add column"
-              className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-white hover:bg-zinc-800"
+              className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-white hover:bg-zinc-800 cursor-pointer"
             >
-              <Plus className="h-4 w-4 cursor-pointer" />
+              <Plus className="h-4 w-4 " />
 
               {/* This span will be hidden below md (768px), and visible on md+ screens */}
-              <span className="hidden md:inline cursor-pointer">Add column</span>
+              <span className="hidden md:inline ">Add column</span>
             </button>
           </div>
         </header>
@@ -101,14 +102,14 @@ function Board() {
                 Add New Column
               </h2>
               <button onClick={() => setIsOpen(false)}>
-                <X className="h-5 w-5 text-zinc-400 hover:text-zinc-200" />
+                <X className="h-5 w-5 text-zinc-400 hover:text-zinc-200 cursor-pointer" />
               </button>
             </div>
             <input
               type="text"
               value={colName}
               onChange={(e) => setColName(e.target.value.slice(0, 70))}
-              maxLength={255}
+              maxLength={70}
               placeholder="Enter column name"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
-import { useBoard } from "../Utilities/Store/Store";
 import Card from "./Card";
+import { useBoard } from "../Utilities/Store/Store";
 
 function Column({ col }) {
   const addCard = useBoard((s) => s.addCard);
@@ -11,62 +11,74 @@ function Column({ col }) {
 
   const [isEditing, setIsEditing] = useState(false);
   const [tempTitle, setTempTitle] = useState(col.title);
-
-  // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
-  const [newDesc, setNewDesc] = useState("");
-
-  // Tooltip state
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // make column droppable
-  const { setNodeRef } = useDroppable({ id: col.id });
+  // ✅ Droppable
+  const { isOver, setNodeRef } = useDroppable({ id: col.id });
 
   const handleAddCard = () => {
     if (!newTitle.trim()) return;
-    addCard(col.id, newTitle.trim(), newDesc.trim());
+    addCard(col.id, newTitle.trim(), "");
     setNewTitle("");
-    setNewDesc("");
     setIsModalOpen(false);
   };
 
   return (
     <div
       ref={setNodeRef}
-      className="flex ml-5 flex-col gap-3 rounded-2xl border border-zinc-700 bg-zinc-900/80 p-3"
+      className="relative flex flex-col gap-3 rounded-2xl border border-zinc-700 p-3 bg-zinc-900/80"
     >
+      {/* Hover Overlay */}
+      {isOver && (
+        <div className="absolute inset-0 border-2 border-blue-400 rounded-2xl pointer-events-none transition-all duration-200"></div>
+      )}
+
       {/* Column Header */}
-      <div className="flex items-center gap-2 relative">
-        {isEditing ? (
-          <input
-            value={tempTitle}
-            onChange={(e) => setTempTitle(e.target.value)}
-            onBlur={() => {
-              updateColumnTitle(col.id, tempTitle.trim() || col.title);
-              setIsEditing(false);
-            }}
-            autoFocus
-            className="flex-1 rounded bg-zinc-800 px-2 text-sm text-white"
-          />
-        ) : (
-          <h3
-            className="flex-1 font-medium text-zinc-100 cursor-pointer truncate max-w-[200px]"
-            onClick={() => setIsEditing(true)}
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-          >
-            {col.title}
-          </h3>
-        )}
+      <div className="flex items-center gap-2 z-10">
+        <div className="flex-1">
+          {isEditing ? (
+            <input
+              value={tempTitle}
+              onChange={(e) => setTempTitle(e.target.value)}
+              onBlur={() => {
+                updateColumnTitle(col.id, tempTitle.trim() || col.title);
+                setIsEditing(false);
+              }}
+              autoFocus
+              className="w-full rounded bg-zinc-800 px-2 text-sm text-white"
+            />
+          ) : (
+            <div className="relative w-fit">
+              <h3
+                className="font-medium text-zinc-100 cursor-pointer truncate max-w-[200px]"
+                onClick={() => setIsEditing(true)}
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                {col.title}
+              </h3>
 
-        {/* Tooltip (now inside column, with wrapping + small text) */}
-        {showTooltip && !isEditing && (
-          <div className="absolute top-8 left-0 z-50 max-w-xs rounded-md bg-stone-100 text-black text-xs p-2 shadow-lg break-words whitespace-normal">
-            {col.title}
-          </div>
-        )}
+              {/* Tooltip */}
+              {showTooltip && !isEditing && (
+                <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 
+                                z-[9999] max-w-xs rounded-md bg-stone-100 text-black text-xs 
+                                p-2 shadow-lg break-words whitespace-normal">
+                  {col.title}
+                  {/* Arrow */}
+                  <div
+                    className="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 
+                               border-l-4 border-r-4 border-b-4 border-transparent 
+                               border-b-stone-100"
+                  ></div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
+        {/* Remove Button */}
         <button
           onClick={() => removeColumn(col.id)}
           className="text-xs text-red-400 cursor-pointer"
@@ -76,18 +88,16 @@ function Column({ col }) {
       </div>
 
       {/* Cards */}
-      <div id={col.id} className="flex flex-col gap-2">
-        <SortableContext items={col.cardIds} strategy={rectSortingStrategy}>
-          {col.cardIds.map((cid) => (
-            <Card key={cid} id={cid} colId={col.id} />
-          ))}
-        </SortableContext>
-      </div>
+      <SortableContext items={col.cardIds} strategy={rectSortingStrategy}>
+        {col.cardIds.map((cid) => (
+          <Card key={cid} id={cid} colId={col.id} />
+        ))}
+      </SortableContext>
 
       {/* Add Card Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="rounded-xl border border-zinc-700 bg-zinc-800 p-2 text-sm cursor-pointer hover:bg-zinc-700"
+        className="rounded-xl border border-zinc-700 bg-zinc-800 p-2 text-sm cursor-pointer hover:bg-zinc-700 z-0"
       >
         + Add Card
       </button>
@@ -99,23 +109,13 @@ function Column({ col }) {
             <h3 className="text-lg font-semibold mb-4 text-white">
               Create New Card
             </h3>
-
             <input
               type="text"
               placeholder="Card title..."
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               className="w-full border p-2 rounded-md mb-3 text-white"
-              required
             />
-
-            {/* <textarea
-              placeholder="Card description..."
-              value={newDesc}
-              onChange={(e) => setNewDesc(e.target.value)}
-              className="w-full border p-2 rounded-md mb-4 text-white"
-            /> */}
-
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setIsModalOpen(false)}
