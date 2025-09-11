@@ -71,9 +71,13 @@ function Board() {
             </h1>
             <button
               onClick={() => setIsOpen(true)}
+              title="Add column"
               className="inline-flex items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-white hover:bg-zinc-800"
             >
-              <Plus className="h-4 w-4" /> Add column
+              <Plus className="h-4 w-4 cursor-pointer" />
+
+              {/* This span will be hidden below md (768px), and visible on md+ screens */}
+              <span className="hidden md:inline cursor-pointer">Add column</span>
             </button>
           </div>
         </header>
@@ -91,7 +95,7 @@ function Board() {
       {/* Modal */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-zinc-900 p-6 rounded-2xl shadow-lg w-96">
+          <div className="bg-zinc-900 p-4 md:p-6 rounded-2xl shadow-lg w-[90%] max-w-sm max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-white">
                 Add New Column
@@ -103,8 +107,8 @@ function Board() {
             <input
               type="text"
               value={colName}
-              onChange={(e) => setColName(e.target.value.slice(0, 70))} // max 255 chars
-              maxLength={255} // browser side limit
+              onChange={(e) => setColName(e.target.value.slice(0, 70))}
+              maxLength={255}
               placeholder="Enter column name"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

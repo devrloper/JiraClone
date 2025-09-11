@@ -1,7 +1,7 @@
-import { useState } from "react"; 
+import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import clsx from "clsx";
 import { useBoard } from "../Utilities/Store/Store";
 
@@ -23,31 +23,33 @@ function Card({ id, colId }) {
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [tempTitle, setTempTitle] = useState(card?.title || "");
   const [tempDesc, setTempDesc] = useState(card?.description || "");
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const style = { transform: CSS.Transform.toString(transform), transition };
 
   if (!card) return null;
+
+  // Limit title length to 70 characters
+  const truncatedTitle =
+    card.title.length > 70 ? card.title.slice(0, 67) + "..." : card.title;
 
   return (
     <div
       ref={setNodeRef}
       style={style}
       className={clsx(
-        "group rounded-2xl border border-zinc-700 bg-zinc-800 p-3 shadow-sm",
+        "group rounded-2xl border border-zinc-700 bg-zinc-800 p-3 shadow-sm relative",
         isDragging && "opacity-60"
       )}
       {...attributes}
-      {...(!isEditingTitle && !isEditingDesc ? listeners : {})} // Disable drag listeners while editing
+      {...(!isEditingTitle && !isEditingDesc ? listeners : {})}
     >
-      <div className="flex items-center gap-2">
-        <button className="cursor-grab">
-          {/* <GripVertical className="h-4 w-4 text-zinc-400" /> */}
-        </button>
-
+      <div className="flex items-center gap-2 relative">
         {/* Title with Edit Icon */}
         {isEditingTitle ? (
           <input
             value={tempTitle}
+            maxLength={70} // restrict user input to 70 chars
             onChange={(e) => setTempTitle(e.target.value)}
             onBlur={() => {
               updateCard(id, tempTitle.trim() || card.title, card.description);
@@ -64,16 +66,29 @@ function Card({ id, colId }) {
             className="flex-1 rounded bg-zinc-700 px-2 text-sm text-zinc-100"
           />
         ) : (
-          <div className="flex-1 flex items-center justify-between">
-            <span className="text-sm text-zinc-100 font-medium">{card.title}</span>
+          <div
+            className="flex-1 flex items-center justify-between"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            <span className="text-sm text-zinc-100 font-medium truncate max-w-[160px] cursor-pointer">
+              {truncatedTitle}
+            </span>
             <Pencil
-              className="h-4 w-4 text-zinc-400 cursor-pointer hover:text-blue-400"
+              className="h-4 w-4 text-zinc-400 cursor-pointer hover:text-blue-400 ml-2"
               onPointerDown={(e) => e.stopPropagation()}
               onClick={() => {
                 setTempTitle(card.title || "");
                 setIsEditingTitle(true);
               }}
             />
+          </div>
+        )}
+
+        {/* Tooltip */}
+        {showTooltip && !isEditingTitle && (
+          <div className="absolute top-full left-0 mt-1 z-10 max-w-xs rounded-md bg-stone-100 text-black text-xs p-2 shadow-lg break-words whitespace-normal">
+            {card.title}
           </div>
         )}
 
@@ -126,3 +141,4 @@ function Card({ id, colId }) {
 }
 
 export default Card;
+

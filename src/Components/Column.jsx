@@ -62,7 +62,7 @@ function Column({ col }) {
 
         {/* Tooltip (now inside column, with wrapping + small text) */}
         {showTooltip && !isEditing && (
-          <div className="absolute top-full left-0 mt-1 w-full rounded-lg bg-stone-100 text-black text-xs p-2 shadow-lg break-words whitespace-normal">
+          <div className="absolute top-8 left-0 z-50 max-w-xs rounded-md bg-stone-100 text-black text-xs p-2 shadow-lg break-words whitespace-normal">
             {col.title}
           </div>
         )}
@@ -95,7 +95,7 @@ function Column({ col }) {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="bg-zinc-900 p-6 rounded-xl w-96 shadow-lg">
+          <div className="bg-zinc-900 p-4 md:p-6 rounded-2xl shadow-lg w-[90%] max-w-sm max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-semibold mb-4 text-white">
               Create New Card
             </h3>
@@ -109,12 +109,12 @@ function Column({ col }) {
               required
             />
 
-            <textarea
+            {/* <textarea
               placeholder="Card description..."
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
               className="w-full border p-2 rounded-md mb-4 text-white"
-            />
+            /> */}
 
             <div className="flex justify-end gap-3">
               <button
