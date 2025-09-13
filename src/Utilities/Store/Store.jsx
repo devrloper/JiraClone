@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { nanoid } from "nanoid"; //make unique Id for each card or column its a library
+//make unique Id for each card or column its a library
 import { arrayMove } from "@dnd-kit/sortable"; //helper to move element to one positon to another(use for drag or drop)
 import { persist } from "zustand/middleware";
-import { v4 as uuidv4 } from "uuid";
+
 export const useBoard = create(
   persist(
     (set) => ({
@@ -10,14 +10,13 @@ export const useBoard = create(
         "col-todo": { id: "col-todo", title: "To Do", cardIds: [] },
         "col-doing": { id: "col-doing", title: "To Do", cardIds: [] },
         "col-dong": { id: "col-dong", title: "To Do", cardIds: [] },
-        
       },
       cards: {}, //object,all cards detail inside it
       addColumn: (
         title //ADD NEW COLUMN
       ) =>
         set((state) => {
-          const id = `col-${nanoid(6)}`; //MAKE UNIQUE id of 6 characters
+          const id = `col-${Object.keys(state.columns).length + 1}`; //MAKE UNIQUE id of 6 characters
           return {
             columns: {
               ...state.columns, //make copy of previous column taa kay data update kr saky hum
@@ -38,19 +37,43 @@ export const useBoard = create(
         }),
       addCard: (colId, title, description) =>
         set((state) => {
-          const id = `card-${nanoid(6)}`; //generate unique id of 6 characters
-          const card = {
-            id,
-            title: title,
-            description: description,
-          };
-          const col = state.columns[colId]; //target column ko nikalna
-          if (!col) return {}; //agr column nhi exist kerta to kuch nhi kerna
+          // sab cards ki keys nikal lo (jaise: card-1, card-2, card-3)
+          const existingIds = Object.keys(state.cards);
+
+          // check karo agar koi card hi nahi hai to maxIndex = 0
+          // warna har card ka number part (split karke "-") nikal ke sab ka max le lo
+          const maxIndex =
+            existingIds.length === 0
+              ? 0
+              : Math.max(
+                  ...existingIds.map((k) => {
+                    // yahan se "card-5" ka "5" number nikal rahe hain
+                    const n = parseInt(k.split("-")[1], 10);
+                    // agar n number hai to use return karo warna 0 return karo
+                    return Number.isFinite(n) ? n : 0;
+                  })
+                );
+
+          // naya card banate waqt previous max number + 1 karke nayi id banao
+          // jaise agar last card "card-3" hai to ye "card-4" banayega
+          const newId = `card-${maxIndex + 1}`;
+
+          // naya card object banao jisme id, title aur description ho
+          const newCard = { id: newId, title, description };
+
+          // jis column me card add karna hai us column ko state se nikaal lo
+          const col = state.columns[colId];
+          if (!col) return {}; // agar column exist nahi karta to kuch mat karo
+
+          // state update return karo:
           return {
-            cards: { ...state.cards, [id]: card }, // pehle wali cards copy karke, naya card add karna
+            // cards object me purane cards spread karo aur naya card add kar do
+            cards: { ...state.cards, [newId]: newCard },
+
+            // jis column me card add karna hai uske cardIds me naya card ka id push kar do
             columns: {
               ...state.columns,
-              [colId]: { ...col, cardIds: [...col.cardIds, id] }, // pehle wali columns copy karke, specific column me card ka id add karna
+              [colId]: { ...col, cardIds: [...col.cardIds, newId] },
             },
           };
         }),
@@ -151,28 +174,30 @@ export const useBoard = create(
             },
           };
         }),
-  ShowDetail: (colId, title = "", description = "") => {
-  const id = uuidv4(); // unique id
-  set((state) => ({
-    cards: {
-      ...state.cards,
-      [id]: { id, colId, title, description },
-    },
-    columns: {
-      ...state.columns,
-      [colId]: {
-        ...state.columns[colId],
-        cardIds: [...state.columns[colId].cardIds, id],
-      },
-    },
-  }));
-},
 
+      ShowCardid: (columnId, title, description) =>
+        set((state) => {
+          const newId = `card-${Object.keys(state.cards).length + 1}`;
+          const newCard = { id: newId, title, description };
+
+          return {
+            cards: {
+              ...state.cards,
+              [newId]: newCard,
+            },
+            columns: {
+              ...state.columns,
+              [columnId]: {
+                ...state.columns[columnId],
+                cardIds: [...state.columns[columnId].cardIds, newId],
+              },
+            },
+          };
+        }),
     }),
-    
     {
       name: "Jira Board",
-      getStorage: () => localStorage, //use is optional
+      getStorage: () => localStorage,
     }
   )
 );

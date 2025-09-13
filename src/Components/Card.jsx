@@ -81,7 +81,8 @@ function Card({ id, colId }) {
                 setIsModalOpen(true);
               }}
             >
-              <Link to={`/card/${id}`}>{truncatedTitle}</Link>{" "}
+              <Link to={`/card/${id}`}>{truncatedTitle}</Link>
+
             </span>
 
             <Pencil
@@ -161,17 +162,17 @@ function Card({ id, colId }) {
                 );
                 setIsModalOpen(false);
               }}
-              className="px-4 py-2 rounded-lg bg-white text-black hover:bg-zinc-200 cursor-pointer"
+              className="px-4 py-2 rounded-lg  bg-white text-black hover:bg-zinc-200 cursor-pointer"
             >
               Save
             </button>
             <Link
               to={`/card/${id}`}
-              className="px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-400 cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-gray-700 text-black hover:bg-gray-600 cursor-pointer"
               onClick={() => setIsModalOpen(false)} // modal bhi band ho jaye
             >
               Show Details
-            </Link>
+            </Link> 
           </div>
         </div>
       </div>

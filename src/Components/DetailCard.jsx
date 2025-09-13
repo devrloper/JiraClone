@@ -1,23 +1,54 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useBoard } from "../Utilities/Store/Store";
 
-function CardDetails() {
-  const { id } = useParams(); // UUID from URL
-  const card = useBoard((s) => s.cards[id]);
+function CardDetailPage() {
+  const { displayId } = useParams();
+  const navigate = useNavigate();
+  const card = useBoard((s) =>
+    Object.values(s.cards).find((c) => c.displayId === displayId)
+  );
 
   if (!card) {
-    return <p className="text-white">Card not found</p>;
+    return (
+      <div className="Flex items-center justify-center min-h-screen bg-zinc-900">
+        <div className="bg-red-500/20 text-red-400 p-6 rounded-lg shadow-lg">
+          Card not found
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 text-white">
-      <h1 className="text-2xl font-bold">{card.title}</h1>
-      <div
-        className="mt-4"
-        dangerouslySetInnerHTML={{ __html: card.description }}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-zinc-900 via-black to-zinc-800 text-white flex justify-center items-center p-6">
+      <div className="max-w-3xl w-full space-y-6">
+        <div className=" border border-amber-50 p-4 rounded-xl text-center bg-zinc-800/60 w-full max-w-md mx-auto  ">
+          <h1 className="text-xl font-semibold text-white">
+            Your card details are here
+          </h1>
+        </div>
+        <div className="max-w-3xl w-full bg-zinc-900/70 border border-zinc-700 rounded-2xl shadow-xl p-8 backdrop-blur-md">
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="mb-6 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-300 bg-zinc-800 hover:bg-zinc-700 rounded-lg transition-colors"
+          >
+            ← Back
+          </button>
+
+          {/* Title */}
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 text-white tracking-wide">
+            {card.title}
+          </h1>
+
+          {/* Description */}
+          <div
+            className="prose prose-invert max-w-none text-gray-300 bg-zinc-800/60 p-5 rounded-xl border border-zinc-700 shadow-inner"
+            dangerouslySetInnerHTML={{ __html: card.description }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
 
-export default CardDetails;
+export default CardDetailPage;

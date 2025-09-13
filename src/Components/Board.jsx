@@ -86,7 +86,9 @@ function Board() {
         {/* Columns */}
         <div className="flex flex-row gap-4 overflow-auto px-4 py-6  min-h-screen">
           {columnList.map((col) => (
+            
             <div key={col.id} className="min-w-[300px] flex-shrink-0">
+              
               <Column col={col} />
             </div>
           ))}
