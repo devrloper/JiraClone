@@ -2,11 +2,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useBoard } from "../Utilities/Store/Store";
 
 function CardDetailPage() {
-  const { displayId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
+
   const card = useBoard((s) =>
-    Object.values(s.cards).find((c) => c.displayId === displayId)
-  );
+    s.cards[id]);
+
 
   if (!card) {
     return (
