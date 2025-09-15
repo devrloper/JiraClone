@@ -170,6 +170,7 @@ export const useBoard = create(
                 ...state.cards[cardId],
                 title: newTitle ?? state.cards[cardId].title,
                 description: newDesc ?? state.cards[cardId].description,
+                
               },
             },
           };

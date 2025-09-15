@@ -21,7 +21,7 @@ function Sidebar({ active, setActive }) {
       items: [
         { id: "home", label: "Home", icon: <Grid className="h-5 w-5" /> },
         { id: "dashboard", label: "Dashboard", icon: <FolderKanban className="h-5 w-5" /> },
-        { id: "recent", label: "Recent", icon: <Clock className="h-5 w-5" /> },
+        { id: "Members", label: "Members", icon: <Clock className="h-5 w-5" /> },
         { id: "starred", label: "Starred", icon: <Star className="h-5 w-5" /> },
         { id: "apps", label: "Apps", icon: <Grid className="h-5 w-5" /> },
         { id: "plans", label: "Plans", icon: <ClipboardList className="h-5 w-5" /> },

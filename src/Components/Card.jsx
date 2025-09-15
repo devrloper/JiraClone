@@ -7,6 +7,7 @@ import { useBoard } from "../Utilities/Store/Store";
 import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
 import { Link } from "react-router-dom";
+import AssigneeCircle from "./AssignedTask";
 function Card({ id, colId }) {
   const card = useBoard((s) => s.cards[id]);
   const removeCard = useBoard((s) => s.removeCard);
@@ -82,7 +83,6 @@ function Card({ id, colId }) {
               }}
             >
               <Link to={`/card/${id}`}>{truncatedTitle}</Link>
-
             </span>
 
             <Pencil
@@ -116,6 +116,10 @@ function Card({ id, colId }) {
           >
             <Trash2 className="h-4 w-4 text-zinc-400 hover:text-red-400 cursor-pointer" />
           </button>
+
+          <div className="relative">
+            <AssigneeCircle />
+          </div>
         </div>
       </div>
 
@@ -124,13 +128,13 @@ function Card({ id, colId }) {
       <div
         className={
           isModalOpen
-            ? "fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+            ? "fixed inset-0 bg-black/60 flex items-center justify-center z-50 "
             : "hidden"
         }
       >
         <div className="bg-zinc-900 p-6 rounded-2xl shadow-lg w-[90%] max-w-2xl">
           {/* Title */}
-          <h2 className="text-lg font-semibold text-white mb-4">
+          <h2 className="text-lg font-semibold text-white mb-4 ">
             <input
               value={tempTitle}
               maxLength={70} //Title limit
@@ -141,8 +145,20 @@ function Card({ id, colId }) {
           </h2>
 
           {/* Rich Text Description using react-quilljs */}
-          <div className="bg-black/60 rounded-md text-white ">
-            <div ref={quillRef} style={{ minHeight: "200px" }} />
+
+          <div className="text-white">
+            <div
+              className="rounded-2xl overflow-hidden border
+   
+    [&_.ql-toolbar]:border-0 [&_.ql-container]:border-0
+
+    [&_.ql-toolbar_.ql-stroke]:white
+    [&_.ql-toolbar_.ql-fill]:white
+    [&_.ql-picker]:text-white [&_.ql-picker-label]:text-white
+    [&_.ql-picker-options]:bg-zinc-800 [&_.ql-picker-options]:text-white "
+            >
+              <div ref={quillRef} className="min-h-[200px]" />
+            </div>
           </div>
 
           {/* Buttons */}
@@ -172,7 +188,7 @@ function Card({ id, colId }) {
               onClick={() => setIsModalOpen(false)} // modal bhi band ho jaye
             >
               Show Details
-            </Link> 
+            </Link>
           </div>
         </div>
       </div>
