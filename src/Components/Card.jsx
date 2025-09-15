@@ -147,16 +147,7 @@ function Card({ id, colId }) {
           {/* Rich Text Description using react-quilljs */}
 
           <div className="text-white">
-            <div
-              className="rounded-2xl overflow-hidden border
-   
-    [&_.ql-toolbar]:border-0 [&_.ql-container]:border-0
-
-    [&_.ql-toolbar_.ql-stroke]:white
-    [&_.ql-toolbar_.ql-fill]:white
-    [&_.ql-picker]:text-white [&_.ql-picker-label]:text-white
-    [&_.ql-picker-options]:bg-zinc-800 [&_.ql-picker-options]:text-white "
-            >
+            <div className="rounded-2xl overflow-hidden border [&_.ql-toolbar]:border-0 [&_.ql-container]:border-0 [&_.ql-toolbar_.ql-stroke]:white[&_.ql-toolbar_.ql-fill]:white [&_.ql-picker]:text-white [&_.ql-picker-label]:text-white [&_.ql-picker-options]:bg-zinc-800 [&_.ql-picker-options]:text-white ">
               <div ref={quillRef} className="min-h-[200px]" />
             </div>
           </div>
