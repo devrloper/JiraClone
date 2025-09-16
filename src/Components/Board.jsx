@@ -65,11 +65,13 @@ function Board() {
       {/* Main Page UI */}
       <div className="min-h-screen ">
         {/* Header */}
-        <header className="border-b border-zinc-800 bg-zinc-950 p-4 z-30">
-          <div className="mx-auto flex max-w-7xl items-center justify-between">
-            <h1 className="text-2xl font-bold text-white">
-              Organize your tasks
-            </h1>
+     <header className="border-b border-zinc-800 bg-black lg:bg-zinc-950 lg:mt-0 p-4 z-50  mt-8 md:mt-8 ">
+  <div className="mx-auto flex max-w-7xl items-center justify-between ">
+  
+    
+    <h1 className="text-2xl font-bold text-white">
+      Organize your tasks
+    </h1>
             <button
               onClick={() => setIsOpen(true)}
               title="Add column"
