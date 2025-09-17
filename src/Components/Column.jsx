@@ -13,8 +13,9 @@ function Column({ col }) {
   const [tempTitle, setTempTitle] = useState(col.title);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
-  const [newType, setNewType] = useState("story"); // ✅ type ka state
+  const [newType, setNewType] = useState(""); // ✅ type ka state
   const [showTooltip, setShowTooltip] = useState(false);
+  
 
   //  Droppable
   const { isOver, setNodeRef } = useDroppable({ id: col.id });
@@ -130,10 +131,13 @@ function Column({ col }) {
             <select
               value={newType}
               onChange={(e) => setNewType(e.target.value)}
-              className="w-full border p-2 rounded-md mb-3 bg-zinc-800 text-white"
+              className="w-full border p-2 rounded-md mb-3 bg-zinc-800 text-white cursor-pointer"
             >
-              <option value="story">📘 Story</option>
-              <option value="bug">🐞 Bug</option>
+              <option value="" disabled >
+                Select your type
+              </option>
+              <option  className="cursor-pointer" value="story">📘 Story</option>
+              <option  className="cursor-pointer" value="bug">🐞 Bug</option>
             </select>
 
             <p className="text-xs text-gray-400 mt-1">{newTitle.length}/70</p>

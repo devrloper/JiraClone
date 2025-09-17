@@ -6,7 +6,7 @@ function CardDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const card = useBoard((s) => s.cards[id]);
+  const card = useBoard((s) => s.cards[`card-${id}`]);
 
   if (!card) {
     return (

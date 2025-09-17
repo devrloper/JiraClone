@@ -160,7 +160,7 @@ export const useBoard = create(
           };
         }),
 
-      updateCard: (cardId, newTitle, newDesc) =>
+      updateCard: (cardId, newTitle, newDesc, newComments) =>
         set((state) => {
           if (!state.cards[cardId]) return {};
           return {
@@ -170,20 +170,8 @@ export const useBoard = create(
                 ...state.cards[cardId],
                 title: newTitle ?? state.cards[cardId].title,
                 description: newDesc ?? state.cards[cardId].description,
+                comments: newComments ?? state.cards[cardId].comments,
               },
-            },
-          };
-        }),
-      addComment: (cardId, comment) =>
-        set((state) => {
-          const updatedCard = {
-            ...state.cards[cardId],
-            comments: [...(state.cards[cardId].comments || []), comment],
-          };
-          return {
-            cards: {
-              ...state.cards,
-              [cardId]: updatedCard,
             },
           };
         }),
