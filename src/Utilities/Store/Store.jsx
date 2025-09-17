@@ -16,7 +16,7 @@ export const useBoard = create(
         title //ADD NEW COLUMN
       ) =>
         set((state) => {
-          const id = `col-${Object.keys(state.columns).length + 1}`; //MAKE UNIQUE id of 6 characters
+          const id = `col-${Date.now()}`; //MAKE UNIQUE id of 6 characters
           return {
             columns: {
               ...state.columns, //make copy of previous column taa kay data update kr saky hum
@@ -35,7 +35,7 @@ export const useBoard = create(
           removed.cardIds.forEach((cid) => delete newCards[cid]); //hr card jo column kay under hai us ki ID lay kr us ko remove kr dena
           return { columns: rest, cards: newCards };
         }),
-      addCard: (colId, title, description) =>
+      addCard: (colId, title, description, type) =>
         set((state) => {
           // sab cards ki keys nikal lo (jaise: card-1, card-2, card-3)
           const existingIds = Object.keys(state.cards);
@@ -59,7 +59,7 @@ export const useBoard = create(
           const newId = `card-${maxIndex + 1}`;
 
           // naya card object banao jisme id, title aur description ho
-          const newCard = { id: newId, title, description };
+          const newCard = { id: newId, title, description, type };
 
           // jis column me card add karna hai us column ko state se nikaal lo
           const col = state.columns[colId];
@@ -170,8 +170,20 @@ export const useBoard = create(
                 ...state.cards[cardId],
                 title: newTitle ?? state.cards[cardId].title,
                 description: newDesc ?? state.cards[cardId].description,
-                
               },
+            },
+          };
+        }),
+      addComment: (cardId, comment) =>
+        set((state) => {
+          const updatedCard = {
+            ...state.cards[cardId],
+            comments: [...(state.cards[cardId].comments || []), comment],
+          };
+          return {
+            cards: {
+              ...state.cards,
+              [cardId]: updatedCard,
             },
           };
         }),

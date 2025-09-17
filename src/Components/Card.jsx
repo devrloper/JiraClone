@@ -8,10 +8,20 @@ import { useQuill } from "react-quilljs";
 import "quill/dist/quill.snow.css";
 import { Link } from "react-router-dom";
 import AssigneeCircle from "./AssignedTask";
+
 function Card({ id, colId }) {
   const card = useBoard((s) => s.cards[id]);
   const removeCard = useBoard((s) => s.removeCard);
   const updateCard = useBoard((s) => s.updateCard);
+  const [newComment, setNewComment] = useState("");
+
+  // get addComment function from zustand
+  const addComment = useBoard((s) => s.addComment);
+  // Card.jsx ya common constants file me
+  const typeIcons = {
+    story: "📘",
+    bug: "🐞",
+  };
 
   const {
     attributes,
@@ -31,15 +41,12 @@ function Card({ id, colId }) {
 
   useEffect(() => {
     if (quill && isModalOpen) {
-      // Set initial content
       quill.root.innerHTML = tempDesc || "";
 
-      // Update tempDesc on text change with LIMIT
       quill.on("text-change", () => {
-        const plainText = quill.getText(); // plain text (without HTML tags)
+        const plainText = quill.getText();
 
         if (plainText.length > 500) {
-          // Limit = 500 chars
           quill.deleteText(500, plainText.length);
         }
 
@@ -121,10 +128,19 @@ function Card({ id, colId }) {
             <AssigneeCircle />
           </div>
         </div>
+        {/* Card ID & Type */}
+        <div className="flex items-center gap-1 ">
+          {card.type && (
+            <span className="flex items-center  text-xs  rounded  text-white">
+              {/* Icon from map */}
+              <span>{typeIcons[card.type]}</span>
+            </span>
+          )}
+          <span className="text-[0.8rem] text-gray-400">{id}</span>
+        </div>
       </div>
 
       {/* MODAL */}
-      {/* {isModalOpen && ( */}
       <div
         className={
           isModalOpen
@@ -137,18 +153,59 @@ function Card({ id, colId }) {
           <h2 className="text-lg font-semibold text-white mb-4 ">
             <input
               value={tempTitle}
-              maxLength={70} //Title limit
+              maxLength={70}
               onChange={(e) => setTempTitle(e.target.value)}
               className="w-full rounded bg-zinc-800 px-3 py-2 text-white"
             />
             <p className="text-xs text-gray-400 mt-1">{tempTitle.length}/70</p>
           </h2>
 
-          {/* Rich Text Description using react-quilljs */}
-
+          {/* Rich Text Description */}
           <div className="text-white">
             <div className="rounded-2xl overflow-hidden border [&_.ql-toolbar]:border-0 [&_.ql-container]:border-0 [&_.ql-toolbar_.ql-stroke]:white[&_.ql-toolbar_.ql-fill]:white [&_.ql-picker]:text-white [&_.ql-picker-label]:text-white [&_.ql-picker-options]:bg-zinc-800 [&_.ql-picker-options]:text-white ">
               <div ref={quillRef} className="min-h-[200px]" />
+            </div>
+          </div>
+          {/* Comments Section */}
+          <div className="mt-6">
+            <h3 className="text-sm text-gray-300 mb-2">Comments</h3>
+
+            {/* Input box for new comment */}
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                className="flex-1 rounded-lg px-3 py-2 bg-zinc-800 text-white text-sm"
+              />
+              <button
+                onClick={() => {
+                  if (!newComment.trim()) return;
+                  addComment(id, newComment); // store comment function
+                  setNewComment("");
+                }}
+                className="px-3 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 cursor-pointer text-sm"
+              >
+                Post
+              </button>
+            </div>
+
+            {/* List of comments */}
+            <div className="mt-3 space-y-2 max-h-40 overflow-y-auto">
+              {card.comments && card.comments.length > 0 ? (
+                card.comments.map((c, i) => (
+                  <div
+                    key={i}
+                    className="p-2 bg-zinc-800 rounded-lg text-sm text-white flex items-center gap-2"
+                  >
+                    <span>💬</span>
+                    <span>{c}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-gray-500">No comments yet</p>
+              )}
             </div>
           </div>
 
@@ -176,14 +233,13 @@ function Card({ id, colId }) {
             <Link
               to={`/card/${id}`}
               className="px-4 py-2 rounded-lg bg-gray-700 text-black hover:bg-gray-600 cursor-pointer"
-              onClick={() => setIsModalOpen(false)} // modal bhi band ho jaye
+              onClick={() => setIsModalOpen(false)}
             >
               Show Details
             </Link>
           </div>
         </div>
       </div>
-      {/* )} */}
     </>
   );
 }

@@ -13,6 +13,7 @@ function Column({ col }) {
   const [tempTitle, setTempTitle] = useState(col.title);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+  const [newType, setNewType] = useState("story"); // ✅ type ka state
   const [showTooltip, setShowTooltip] = useState(false);
 
   //  Droppable
@@ -20,8 +21,13 @@ function Column({ col }) {
 
   const handleAddCard = () => {
     if (!newTitle.trim()) return;
-    addCard(col.id, newTitle.trim(), "");
+
+    // ✅ ab sirf ek hi call hoga, type bhi jaayega
+    addCard(col.id, newTitle.trim(), "", newType);
+
+    // reset
     setNewTitle("");
+    setNewType("story");
     setIsModalOpen(false);
   };
 
@@ -41,16 +47,15 @@ function Column({ col }) {
           {isEditing ? (
             <input
               value={tempTitle}
-              onChange={(e) => setTempTitle(e.target.value.slice(0, 70))} // limit
-              maxLength={70} // browser level limit
+              onChange={(e) => setTempTitle(e.target.value.slice(0, 70))}
+              maxLength={70}
               onBlur={() => {
                 updateColumnTitle(col.id, tempTitle.trim() || col.title);
                 setIsEditing(false);
               }}
               autoFocus
-              className="w-full rounded bg-zinc-800 px-2 text-sm text-white"  
+              className="w-full rounded bg-zinc-800 px-2 text-sm text-white"
             />
-             
           ) : (
             <div className="relative w-fit">
               <h3
@@ -70,7 +75,6 @@ function Column({ col }) {
                                 p-2 shadow-lg break-words whitespace-normal"
                 >
                   {col.title}
-                  {/* Arrow */}
                   <div
                     className="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 
                                border-l-4 border-r-4 border-b-4 border-transparent 
@@ -117,10 +121,21 @@ function Column({ col }) {
               type="text"
               placeholder="Card title..."
               value={newTitle}
-              maxLength={70} //  Title limit yahan bhi
+              maxLength={70}
               onChange={(e) => setNewTitle(e.target.value)}
               className="w-full border p-2 rounded-md mb-3 text-white"
             />
+
+            {/* Type Select */}
+            <select
+              value={newType}
+              onChange={(e) => setNewType(e.target.value)}
+              className="w-full border p-2 rounded-md mb-3 bg-zinc-800 text-white"
+            >
+              <option value="story">📘 Story</option>
+              <option value="bug">🐞 Bug</option>
+            </select>
+
             <p className="text-xs text-gray-400 mt-1">{newTitle.length}/70</p>
             <div className="flex justify-end gap-3">
               <button

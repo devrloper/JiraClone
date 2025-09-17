@@ -65,13 +65,11 @@ function Board() {
       {/* Main Page UI */}
       <div className="min-h-screen ">
         {/* Header */}
-     <header className="border-b border-zinc-800 bg-black lg:bg-zinc-950 lg:mt-0 p-4 z-50  mt-8 md:mt-8 ">
-  <div className="mx-auto flex max-w-7xl items-center justify-between ">
-  
-    
-    <h1 className="text-2xl font-bold text-white">
-      Organize your tasks
-    </h1>
+        <header className="border-b border-zinc-800 bg-black lg:bg-zinc-950 lg:mt-0 p-4 z-50  mt-8 md:mt-8 ">
+          <div className="mx-auto flex max-w-7xl items-center justify-between ">
+            <h1 className="text-2xl font-bold text-white">
+              Organize your tasks
+            </h1>
             <button
               onClick={() => setIsOpen(true)}
               title="Add column"
@@ -88,9 +86,7 @@ function Board() {
         {/* Columns */}
         <div className="flex flex-row gap-4 overflow-auto px-4 py-6  min-h-screen">
           {columnList.map((col) => (
-            
             <div key={col.id} className="min-w-[300px] flex-shrink-0">
-              
               <Column col={col} />
             </div>
           ))}
@@ -113,7 +109,7 @@ function Board() {
               type="text"
               value={colName}
               onChange={(e) => setColName(e.target.value)}
-              maxLength={70} // limit 
+              maxLength={70} // limit
               placeholder="Enter column name"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

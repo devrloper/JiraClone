@@ -45,8 +45,8 @@ function AssigneeCircle() {
     <div ref={circleRef} className="relative inline-block">
       {/* Circle (jo click karenge to dropdown khulega) */}
       <div
-        className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center 
-                   text-white text-sm cursor-pointer border border-gray-400"
+        className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center 
+                   text-white text-sm cursor-pointer border border-gray-400  hover:bg-zinc-600"
         onPointerDown={toggleOpen} // PointerDown use karna is liye ke drag interference na ho
         title={assignee ? `Assigned to: ${assignee.name}` : "Assign Member"} // Tooltip dikhata hai
       >
