@@ -120,7 +120,7 @@ function Card({ id, colId }) {
           </button>
 
           <div className="relative">
-            <AssigneeCircle />
+            <AssigneeCircle cardId={card.id} />
           </div>
         </div>
         {/* Card ID & Type */}
