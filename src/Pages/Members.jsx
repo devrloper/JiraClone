@@ -29,7 +29,6 @@ export const members = [
     id: 5,
     name: "Aara ",
     role: "UI/UX Designer",
-    
   },
 ];
 
@@ -43,35 +42,34 @@ function MembersPage() {
             Meet Our Team Members
           </h1>
           <p className="text-gray-400 mt-2 text-sm md:text-base">
-            Dedicated professionals working together for success 
+            Dedicated professionals working together for success
           </p>
         </div>
 
         {/* Members Grid */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 cursor-pointer ">
-  {members.map((member) => (
-    <div
-      key={member.id}
-      className="bg-zinc-800/70 border border-zinc-700 rounded-xl shadow-lg p-6 flex flex-col items-center text-center hover:scale-105 transition-transform"
-    >
-      {member.image ? (
-        <img
-          src={member.image}
-          alt={member.name}
-          className="w-24 h-24 rounded-full border-2 border-amber-400 mb-4 object-cover"
-        />
-      ) : (
-        <div className="w-24 h-24 rounded-full border-2 border-amber-400 mb-4 bg-gray-600 flex items-center justify-center text-white text-2xl font-bold">
-          {member.name.charAt(0).toUpperCase()}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 cursor-pointer ">
+          {members.map((member) => (
+            <div
+              key={member.id}
+              className="bg-zinc-800/70 border border-zinc-700 rounded-xl shadow-lg p-6 flex flex-col items-center text-center hover:scale-105 transition-transform"
+            >
+              {member.image ? (
+                <img
+                  src={member.image}
+                  alt={member.name}
+                  className="w-24 h-24 rounded-full border-2 border-amber-400 mb-4 object-cover"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-full border-2 border-amber-400 mb-4 bg-gray-600 flex items-center justify-center text-white text-2xl font-bold">
+                  {member.name.charAt(0).toUpperCase()}
+                </div>
+              )}
+
+              <h2 className="text-lg font-semibold">{member.name}</h2>
+              <p className="text-sm text-gray-400">{member.role}</p>
+            </div>
+          ))}
         </div>
-      )}
-
-      <h2 className="text-lg font-semibold">{member.name}</h2>
-      <p className="text-sm text-gray-400">{member.role}</p>
-    </div>
-  ))}
-</div>
-
       </div>
     </div>
   );

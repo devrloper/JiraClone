@@ -13,7 +13,7 @@ export const useBoard = create(
       },
       cards: {}, //object,all cards detail inside it
 
-       assignMember: (cardId, memberId) =>
+      assignMember: (cardId, memberId) =>
         set((state) => {
           if (!state.cards[cardId]) return {};
           return {
@@ -73,7 +73,13 @@ export const useBoard = create(
           const newId = `card-${maxIndex + 1}`;
 
           // naya card object banao jisme id, title aur description ho
-          const newCard = { id: newId, title, description, type ,asssignedID:null};
+          const newCard = {
+            id: newId,
+            title,
+            description,
+            type,
+            asssignedID: null,
+          };
 
           // jis column me card add karna hai us column ko state se nikaal lo
           const col = state.columns[colId];
@@ -183,8 +189,7 @@ export const useBoard = create(
               [cardId]: {
                 ...state.cards[cardId],
                 title: newTitle ?? state.cards[cardId].title,
-                description:
-                  newDesc ?? state.cards[cardId].description ?? "",
+                description: newDesc ?? state.cards[cardId].description ?? "",
                 comments: newComments ?? state.cards[cardId].comments ?? [],
                 assigneeId:
                   newAssigneeId !== undefined
@@ -194,12 +199,11 @@ export const useBoard = create(
             },
           };
         }),
-         
 
       ShowCardid: (columnId, title, description) =>
         set((state) => {
           const newId = `card-${Object.keys(state.cards).length + 1}`;
-          const newCard = { id: newId, title, description, assigneeId: null, };
+          const newCard = { id: newId, title, description, assigneeId: null };
 
           return {
             cards: {
